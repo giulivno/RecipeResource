@@ -57,10 +57,16 @@ const FormContainer = styled(Paper)(({ theme }) => ({
 }));
 
 // SignIn Component
-const SignIn = ({ onSignIn }) => {
+const SignIn = ({ onSignIn, onSignOut }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [anchorEl, setAnchorEl] = useState(null);
+    const [isSignedIn, setIsSignedIn] = useState(false);
+
+    useEffect(() => {
+        const signedInStatus = localStorage.getItem('isSignedIn') === 'true';
+        setIsSignedIn(signedInStatus); // Check if the user is already signed in
+    }, []);
 
     const navigate = useNavigate();
 
@@ -68,6 +74,7 @@ const SignIn = ({ onSignIn }) => {
         event.preventDefault();
         // TODO store user info
         const emailPrefix = email.split('@')[0];
+
         const userInfo = {
             email,
             password,
@@ -75,6 +82,7 @@ const SignIn = ({ onSignIn }) => {
         };
 
         localStorage.setItem('user', JSON.stringify(userInfo));
+        localStorage.setItem('isSignedIn', 'true');
 
         onSignIn();
 
@@ -83,6 +91,13 @@ const SignIn = ({ onSignIn }) => {
 
         navigate("/recipes");
     };
+
+    const handleSignOut = () => {
+        localStorage.setItem('isSignedIn', 'false'); 
+        onSignOut(); 
+        setIsSignedIn(false);
+    };
+
 
     
 
@@ -196,6 +211,8 @@ const SignIn = ({ onSignIn }) => {
               margin="dense" // Reduce padding inside the TextField
               placeholder="Enter your email"
               name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
 
             {/* Password Label */}
@@ -213,6 +230,8 @@ const SignIn = ({ onSignIn }) => {
               type="password"
               placeholder="Enter your password"
               name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
 
             <Box

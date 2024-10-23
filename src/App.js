@@ -7,6 +7,7 @@ import SignIn from "./SignIn";
 import Recipes from "./Recipes";
 import Favorites from "./Favorites";
 import AccountSettings from "./AccountSettings";
+import CookingHistory from "./CookingHistory"; // Import CookingHistory
 
 const theme = createTheme({
   palette: {
@@ -49,6 +50,7 @@ function App() {
               <Route path="/recipes" element={<Recipes />} />
               <Route path="/favorites" element={<Favorites />} />
               <Route path="/account-settings" element={<AccountSettings />} />
+              <Route path="/cooking-history" element={<CookingHistory />} /> {/* Add CookingHistory Route */}
               <Route path="*" element={<Navigate to="/recipes" />} />
             </>
           )}

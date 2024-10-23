@@ -197,7 +197,7 @@ const Favorites = () => {
         <Logo src={`${process.env.PUBLIC_URL}/assets/Logo.png`} alt="Logo" />
       </Header>
 
-      {/* Title Section with Heart Icon */}
+      {/* Title Section with Timer Icon */}
       <Box
         sx={{
           display: "flex",
@@ -213,7 +213,7 @@ const Favorites = () => {
           variant="h3"
           sx={{ fontFamily: "Nunito-Bold, Helvetica", color: "#f29057" }}
         >
-          Favorites
+          Cooking History
         </Typography>
       </Box>
 

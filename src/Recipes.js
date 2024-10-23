@@ -1,35 +1,40 @@
-import MenuIcon from "@mui/icons-material/Menu";
+import MenuIcon from "@mui/icons-material/Menu"; 
 import {
   FavoriteBorder,
+  Search,
   Timer,
   ExpandMore as ExpandMoreIcon,
 } from "@mui/icons-material";
 import {
-    Box,
-    Button,
-    Card,
-    CardActions,
-    CardContent,
-    CardMedia,
-    Collapse,
-    Divider,
-    Grid,
-    IconButton,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    TextField,
-    Typography,
-    Dialog,
-    DialogContent,
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Collapse,
+  Divider,
+  Grid,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  TextField,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
     DialogActions,
-    Drawer,
-    ListItemButton, // Import ListItemButton here
-  } from "@mui/material";
+    Menu,
+  MenuItem
+} from "@mui/material";
 import { styled } from "@mui/system";
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Import Link and useNavigate
+import { useNavigate } from "react-router-dom";
+
+
 // Restrictions Component
 const Restrictions = () => {
     const restrictionOptions = [
@@ -252,20 +257,24 @@ const Pantry = () => {
 
 // Recipes Component
 const Recipes = () => {
-    const [drawerOpen, setDrawerOpen] = useState(false); // Drawer state
     const [searchTerm, setSearchTerm] = useState("");
     const contentWidth = { xs: "100%", sm: "600px", md: "900px" };
-    
-    // Toggle Drawer function
-  const toggleDrawer = (open) => () => {
-    setDrawerOpen(open);
-  };
-
+  
     // State to control the dialog visibility
     const [open, setOpen] = useState(false);
     const [selectedRecipe, setSelectedRecipe] = useState(null); // Store selected recipe info
-    const navigate = useNavigate(); // Navigation hook
 
+    // Update favorite state to track favorites for each recipe
+    const [favoriteRecipes, setFavoriteRecipes] = useState({});
+
+    // Favorite toggle function
+    const toggleFavorite = (index) => {
+        setFavoriteRecipes((prevFavorites) => ({
+            ...prevFavorites,
+            [index]: !prevFavorites[index], // Toggle the favorite status for the specific recipe
+        }));
+    };
+  
     const handleSearch = (event) => {
       setSearchTerm(event.target.value);
     };
@@ -280,11 +289,32 @@ const Recipes = () => {
       setSelectedRecipe(null); // Clear selected recipe
     };
   
-    const recipes = Array(6).fill({
+    const recipes = Array(9).fill({
       title: "Recipe Title",
       description: "This is a sample recipe description.",
       image: `${process.env.PUBLIC_URL}/assets/Image.png`,
     });
+
+    {/*Menu Code*/ }
+
+    const [anchorEl, setAnchorEl] = useState(null);
+    const navigate = useNavigate();
+
+    // Open the menu
+    const handleMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    // Close the menu
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    // Navigate to different pages
+    const handleMenuClick = (path) => {
+        navigate(path);
+        handleMenuClose();
+    };
   
     return (
       <Box
@@ -298,39 +328,40 @@ const Recipes = () => {
       >
         {/* Header Section */}
         <Header>
-          <IconButton
-            onClick={toggleDrawer(true)}
-            sx={{
-              position: "absolute",
-              top: "50%",
-              right: "16px",
-              transform: "translateY(-50%)",
-            }}
-          >
-            <MenuIcon /> {/* Hamburger menu icon */}
-          </IconButton>
+                <IconButton
+                    sx={{
+                        position: "absolute",
+                        top: "50%",
+                        right: "16px",
+                        transform: "translateY(-50%)",
+                    }}
+                    onClick={handleMenuOpen}
+
+                >
+                    <MenuIcon /> 
+                </IconButton>
+                <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleMenuClose}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                >
+                    {/* Menu Items */}
+                    <MenuItem onClick={() => handleMenuClick('/recipes')}>Home Page</MenuItem>
+                    <MenuItem onClick={() => handleMenuClick('/favorites')}>Favorite Recipes</MenuItem>
+                    <MenuItem onClick={() => handleMenuClick('/Cooking-History')}>Cooking History</MenuItem>
+                    <MenuItem onClick={() => handleMenuClick('/account-settings')}>Account Settings</MenuItem>
+                </Menu>
           <Logo src={`${process.env.PUBLIC_URL}/assets/Logo.png`} alt="Logo" />
         </Header>
-            
-        {/* Drawer Menu */}
-      <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
-        <Box
-          sx={{ width: 150 }}
-          role="presentation"
-          onClick={toggleDrawer(false)}
-          onKeyDown={toggleDrawer(false)}
-        >
-          <List>
-            <ListItem button component={Link} to="/favorites">
-              <ListItemIcon>
-                <FavoriteBorder />
-              </ListItemIcon>
-              <ListItemText primary="Favorites" />
-            </ListItem>
-          </List>
-        </Box>
-      </Drawer>
-        
+  
         {/* Search Section */}
             <Box
             sx={{
@@ -348,7 +379,8 @@ const Recipes = () => {
             variant="standard"
             placeholder="Search"
             fullWidth
-            InputProps={{ disableUnderline: true }}
+            InputProps={{ disableUnderline: true,
+            style : {paddingLeft: "10px"}}}
             />
             <Button
             variant="contained"
@@ -374,10 +406,21 @@ const Recipes = () => {
             flexWrap: "wrap",
           }}
         >
+
+        {/* Box for Recipe Card Grid - needed to add scroll functionality */}
+        <Box
+            sx={{
+                maxHeight: "600px", // Set a maximum height for the scrollable area
+                overflowY: "auto", // Enable vertical scrolling when content exceeds max height
+                paddingRight: 1, // Optional: Add padding to account for scroll bar width
+                width: "60%", // Make the Box take the full width of the parent container
+            }}
+        >
+
           {/* Recipe Cards with Clickable Pop-Up */}
           <Grid
             container
-            spacing={5}
+            spacing={4}
             sx={{
               width: contentWidth,
               maxWidth: "900px",
@@ -401,7 +444,13 @@ const Recipes = () => {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <FavoriteBorder />
+                  <FavoriteBorder
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent triggering card click
+                        toggleFavorite(index); // Pass the index to toggle favorite
+                      }}
+                      style={{ color: favoriteRecipes[index] ? 'red' : 'gray', cursor: 'pointer' }} // Change color based on favorite status
+                  />
                   <Timer fontSize="small" />
                   <Typography variant="caption" color="#f20597">
                     20 min
@@ -411,7 +460,8 @@ const Recipes = () => {
             </Grid>
             ))}
           </Grid>
-  
+        </Box>
+
           {/* Pantry and Restrictions Section */}
           <Box
             sx={{
@@ -487,6 +537,7 @@ const Recipes = () => {
           variant="outlined"
           startIcon={<FavoriteBorder />}
           sx={{ marginTop: 1 }}
+          onClick = {toggleFavorite}
         >
           Save for later
         </Button>
