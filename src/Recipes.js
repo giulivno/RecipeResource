@@ -1,36 +1,35 @@
-import MenuIcon from "@mui/icons-material/Menu"; 
+import MenuIcon from "@mui/icons-material/Menu";
 import {
   FavoriteBorder,
-  Search,
   Timer,
   ExpandMore as ExpandMoreIcon,
 } from "@mui/icons-material";
 import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Collapse,
-  Divider,
-  Grid,
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  TextField,
-  Typography,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from "@mui/material";
+    Box,
+    Button,
+    Card,
+    CardActions,
+    CardContent,
+    CardMedia,
+    Collapse,
+    Divider,
+    Grid,
+    IconButton,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    TextField,
+    Typography,
+    Dialog,
+    DialogContent,
+    DialogActions,
+    Drawer,
+    ListItemButton, // Import ListItemButton here
+  } from "@mui/material";
 import { styled } from "@mui/system";
 import React, { useState } from "react";
-
+import { Link, useNavigate } from "react-router-dom"; // Import Link and useNavigate
 // Restrictions Component
 const Restrictions = () => {
     const restrictionOptions = [
@@ -253,13 +252,20 @@ const Pantry = () => {
 
 // Recipes Component
 const Recipes = () => {
+    const [drawerOpen, setDrawerOpen] = useState(false); // Drawer state
     const [searchTerm, setSearchTerm] = useState("");
     const contentWidth = { xs: "100%", sm: "600px", md: "900px" };
-  
+    
+    // Toggle Drawer function
+  const toggleDrawer = (open) => () => {
+    setDrawerOpen(open);
+  };
+
     // State to control the dialog visibility
     const [open, setOpen] = useState(false);
     const [selectedRecipe, setSelectedRecipe] = useState(null); // Store selected recipe info
-  
+    const navigate = useNavigate(); // Navigation hook
+
     const handleSearch = (event) => {
       setSearchTerm(event.target.value);
     };
@@ -293,6 +299,7 @@ const Recipes = () => {
         {/* Header Section */}
         <Header>
           <IconButton
+            onClick={toggleDrawer(true)}
             sx={{
               position: "absolute",
               top: "50%",
@@ -304,7 +311,26 @@ const Recipes = () => {
           </IconButton>
           <Logo src={`${process.env.PUBLIC_URL}/assets/Logo.png`} alt="Logo" />
         </Header>
-  
+            
+        {/* Drawer Menu */}
+      <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
+        <Box
+          sx={{ width: 150 }}
+          role="presentation"
+          onClick={toggleDrawer(false)}
+          onKeyDown={toggleDrawer(false)}
+        >
+          <List>
+            <ListItem button component={Link} to="/favorites">
+              <ListItemIcon>
+                <FavoriteBorder />
+              </ListItemIcon>
+              <ListItemText primary="Favorites" />
+            </ListItem>
+          </List>
+        </Box>
+      </Drawer>
+        
         {/* Search Section */}
             <Box
             sx={{
