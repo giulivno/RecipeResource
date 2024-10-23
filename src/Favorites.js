@@ -94,6 +94,7 @@ const Favorites = () => {
     recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Menu handlers
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -145,18 +146,10 @@ const Favorites = () => {
             horizontal: "right",
           }}
         >
-          <MenuItem onClick={() => handleMenuClick("/recipes")}>
-            Home Page
-          </MenuItem>
-          <MenuItem onClick={() => handleMenuClick("/favorites")}>
-            Favorite Recipes
-          </MenuItem>
-          <MenuItem onClick={() => handleMenuClick("/Cooking-History")}>
-            Cooking History
-          </MenuItem>
-          <MenuItem onClick={() => handleMenuClick("/account-settings")}>
-            Account Settings
-          </MenuItem>
+          <MenuItem onClick={() => handleMenuClick("/recipes")}>Home Page</MenuItem>
+          <MenuItem onClick={() => handleMenuClick("/favorites")}>Favorite Recipes</MenuItem>
+          <MenuItem onClick={() => handleMenuClick("/Cooking-History")}>Cooking History</MenuItem>
+          <MenuItem onClick={() => handleMenuClick("/account-settings")}>Account Settings</MenuItem>
         </Menu>
 
         <Logo src={`${process.env.PUBLIC_URL}/assets/Logo.png`} alt="Logo" />
