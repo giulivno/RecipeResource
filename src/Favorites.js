@@ -22,7 +22,9 @@ import {
   MenuItem, // Corrected import from "@mui/material"
 } from "@mui/material";
 import { styled } from "@mui/system";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
+
 
 // Header styling
 const Header = styled(Box)(({ theme }) => ({
@@ -85,7 +87,17 @@ const Favorites = () => {
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState("");
     const [anchorEl, setAnchorEl] = useState(null); // Declare anchorEl and setAnchorEl here
-    const [favorites] = useState([
+    const [favorites, setFavorites] = useState([]);
+
+    useEffect(() => {
+        localStorage.removeItem("favorites");
+        const savedFavorites = JSON.parse(localStorage.getItem("favorites")) || {};
+        const allRecipes = JSON.parse(localStorage.getItem("allRecipes")) || []; // Optional: Store all recipes globally
+        const favoriteRecipes = allRecipes.filter((_, index) => savedFavorites[index]);
+        setFavorites(favoriteRecipes); // Set the favorite recipes to display
+      }, []);
+
+    /*const [favorites] = useState([
     {
       title: "Recipe Title",
       description: "Description of favorite recipe.",
@@ -126,7 +138,7 @@ const Favorites = () => {
       description: "Description of favorite recipe.",
       image: `${process.env.PUBLIC_URL}/assets/Image.png`,
     },
-  ]);
+  ]);*/
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -149,6 +161,8 @@ const Favorites = () => {
     navigate(path);
     handleMenuClose();
   };
+
+  
 
   return (
     <Box

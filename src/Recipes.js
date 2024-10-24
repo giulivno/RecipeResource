@@ -33,6 +33,8 @@ import {
 import { styled } from "@mui/system";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { recipesData } from "./recipesData";
+import { pantryData } from "./pantryData";
 
 
 // Restrictions Component
@@ -178,9 +180,35 @@ const CustomTextField = styled(TextField)({
 const Pantry = () => {
   const [openItems, setOpenItems] = useState({});
 
+  const [selectedPantryItems, setSelectedPantryItems] = useState({
+    essentials: [],
+    fruitsVeggies: [],
+    meats: [],
+    carbohydrates: [],
+    seasonings: []
+  });
+
+  
+
   const handleToggle = (index) => {
     setOpenItems((prev) => ({ ...prev, [index]: !prev[index] }));
   };
+
+  // Handle item selection
+  const handleItemClick = (category, item) => {
+    setSelectedPantryItems((prev) => {
+      const isSelected = prev[category].includes(item);
+      const updatedCategory = isSelected
+        ? prev[category].filter((i) => i !== item)
+        : [...prev[category], item];
+
+      return {
+        ...prev,
+        [category]: updatedCategory
+      };
+    });
+  };
+
 
   const pantryItems = [
     "Essentials",
@@ -217,7 +245,7 @@ const Pantry = () => {
       </Typography>
 
       <List>
-        {pantryItems.map((text, index) => (
+        {Object.keys(pantryData).map((category, index) => (
           <Box key={index}>
             <ListItemButton
               onClick={() => handleToggle(index)}
@@ -228,7 +256,7 @@ const Pantry = () => {
               }}
             >
               <ListItemText
-                primary={text}
+                primary={category.charAt(0).toUpperCase() + category.slice(1)}
                 primaryTypographyProps={{
                   fontFamily: "Nunito-Medium, Helvetica",
                   fontWeight: "medium",
@@ -243,9 +271,24 @@ const Pantry = () => {
             </ListItemButton>
             <Collapse in={openItems[index]} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <ListItem sx={{ pl: 4 }}>
-                  <ListItemText primary={`Sub-item for ${text}`} />
-                </ListItem>
+                {pantryData[category].map((item) => (
+                  <ListItem
+                    key={item}
+                    button
+                    onClick={() => handleItemClick(category, item)}
+                    sx={{
+                      pl: 4,
+                      bgcolor: selectedPantryItems[category].includes(item)
+                        ? "#f5a623"
+                        : "transparent",
+                      color: selectedPantryItems[category].includes(item)
+                        ? "white"
+                        : "inherit",
+                    }}
+                  >
+                    <ListItemText primary={item} />
+                  </ListItem>
+                ))}
               </List>
             </Collapse>
           </Box>
@@ -289,11 +332,7 @@ const Recipes = () => {
       setSelectedRecipe(null); // Clear selected recipe
     };
   
-    const recipes = Array(9).fill({
-      title: "Recipe Title",
-      description: "This is a sample recipe description.",
-      image: `${process.env.PUBLIC_URL}/assets/Image.png`,
-    });
+    const recipes = recipesData || [];
 
     {/*Menu Code*/ }
 
@@ -355,8 +394,8 @@ const Recipes = () => {
                 >
                     {/* Menu Items */}
                     <MenuItem onClick={() => handleMenuClick('/recipes')}>Home Page</MenuItem>
-                    <MenuItem onClick={() => handleMenuClick('/favorites')}>Favorite Recipes</MenuItem>
-                    <MenuItem onClick={() => handleMenuClick('/Cooking-History')}>Cooking History</MenuItem>
+                    <MenuItem onClick={() => handleMenuClick('/favorite-recipes')}>Favorite Recipes</MenuItem>
+                    <MenuItem onClick={() => handleMenuClick('/cooking-history')}>Cooking History</MenuItem>
                     <MenuItem onClick={() => handleMenuClick('/account-settings')}>Account Settings</MenuItem>
                 </Menu>
           <Logo src={`${process.env.PUBLIC_URL}/assets/Logo.png`} alt="Logo" />
@@ -453,7 +492,7 @@ const Recipes = () => {
                   />
                   <Timer fontSize="small" />
                   <Typography variant="caption" color="#f20597">
-                    20 min
+                                {recipe.time}
                   </Typography>
                 </CardActions>
               </StyledCard>
@@ -495,14 +534,16 @@ const Recipes = () => {
     <Box sx={{ display: "flex", gap: 2 }}>
       {/* Image Section */}
       <img
-        src={selectedRecipe?.image}
-        alt="Recipe Image"
-        style={{
-          width: "40%",
-          height: "auto",
-          borderRadius: "8px",
-        }}
-      />
+            src={selectedRecipe?.image}
+            alt="Recipe Image"
+            style={{
+                width: "40%",       
+                height: "auto",     
+                borderRadius: "8px", 
+                objectFit: "cover", 
+                maxWidth: "100%",  
+            }}
+        />
 
       {/* Recipe Details Section */}
       <Box sx={{ flex: 1 }}>
@@ -528,7 +569,7 @@ const Recipes = () => {
         <Box sx={{ display: "flex", alignItems: "center", gap: 1, marginTop: 1 }}>
           <Timer fontSize="small" />
           <Typography variant="body2" color="textSecondary">
-            20 min
+            {selectedRecipe?.time}
           </Typography>
         </Box>
 
@@ -548,15 +589,18 @@ const Recipes = () => {
         </Typography>
 
         {/* Ingredient List */}
-        <Typography variant="subtitle1" sx={{ marginTop: 2 }}>
-          Ingredient List:
-        </Typography>
-        <Typography variant="body2" color="textSecondary">
-          {/* Example ingredient list - replace with dynamic content */}
-          - 1 cup flour <br />
-          - 2 eggs <br />
-          - 1/2 cup sugar
-        </Typography>
+                            <Typography variant="subtitle1" sx={{ marginTop: 2, marginBottom: 0 }}>
+                                Ingredient List:
+                            </Typography>
+                            <ul style={{ marginTop: 0, paddingLeft: '20px' }}>
+                                {selectedRecipe?.ingredients?.map((ingredient, index) => (
+                                    <li key={index}>
+                                        <Typography variant="body2" color="textSecondary" component="span">
+                                            {ingredient}
+                                        </Typography>
+                                    </li>
+                                ))}
+                            </ul>
       </Box>
     </Box>
 
@@ -575,15 +619,13 @@ const Recipes = () => {
         Cooking Instructions
       </Typography>
       <Typography variant="body2">
-        Step 1: Preheat the oven to 350°F (175°C). <br />
-        Step 2: Mix the flour, sugar, and eggs in a bowl. <br />
-        Step 3: Pour the mixture into a baking pan and smooth the top. <br />
-        Step 4: Bake for 20 minutes or until golden brown. <br />
-        Step 5: Let cool before serving. Enjoy! <br />
-        {/* Add more steps to test scrolling behavior */}
-        Step 6: Optional - add frosting or toppings of choice. <br />
-        Step 7: Store any leftovers in the refrigerator for up to 5 days. <br />
-        Step 8: Reheat in the oven at 300°F for 5-10 minutes if desired.
+        <Box>
+            {selectedRecipe?.instructions?.map((step, index) => (
+            <Typography variant="body2" key={index} gutterBottom>
+                {step}
+            </Typography>
+            ))}
+        </Box>
       </Typography>
     </Box>
   </DialogContent>
