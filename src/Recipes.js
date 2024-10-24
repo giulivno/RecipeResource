@@ -1,3 +1,4 @@
+
 import MenuIcon from "@mui/icons-material/Menu"; 
 import {
   FavoriteBorder,
@@ -31,7 +32,7 @@ import {
   MenuItem
 } from "@mui/material";
 import { styled } from "@mui/system";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { recipesData } from "./recipesData";
 import { pantryData } from "./pantryData";
@@ -308,15 +309,48 @@ const Recipes = () => {
     const [selectedRecipe, setSelectedRecipe] = useState(null); // Store selected recipe info
 
     // Update favorite state to track favorites for each recipe
-    const [favoriteRecipes, setFavoriteRecipes] = useState({});
+    const [favorites, setFavorites] = useState(() => {
+        try {
+          const storedFavorites = JSON.parse(localStorage.getItem("favorites"));
+          return storedFavorites || [];
+        } catch (error) {
+          console.error("Failed to parse favorites from localStorage", error);
+          return [];
+        }
+      });
 
-    // Favorite toggle function
-    const toggleFavorite = (index) => {
-        setFavoriteRecipes((prevFavorites) => ({
-            ...prevFavorites,
-            [index]: !prevFavorites[index], // Toggle the favorite status for the specific recipe
-        }));
-    };
+    // Sync favorites with localStorage whenever it changes
+    useEffect(() => {
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+    }, [favorites]);
+
+    // Toggle the favorite status of a recipe
+    const toggleFavorite = (recipe) => {
+        const isAlreadyFavorite = favorites.some((fav) => fav.id === recipe.id);
+      
+        // Create a sanitized version of the recipe with only necessary properties
+        const sanitizedRecipe = {
+          id: recipe.id,
+          title: recipe.title,
+          description: recipe.description,
+          image: recipe.image,
+          time: recipe.time,
+          ingredients: recipe.ingredients,
+          instructions: recipe.instructions,
+        };
+      
+        const updatedFavorites = isAlreadyFavorite
+          ? favorites.filter((fav) => fav.id !== recipe.id) // Remove if already a favorite
+          : [...favorites, sanitizedRecipe]; // Add sanitized recipe
+      
+        setFavorites(updatedFavorites);
+      };
+
+    // Check if a recipe is a favorite
+    const isFavorite = (recipe) => {
+        if (!recipe) return false; // Return false if recipe is null or undefined
+        return favorites.some((fav) => fav.id === recipe.id);
+      };
   
     const handleSearch = (event) => {
       setSearchTerm(event.target.value);
@@ -394,7 +428,7 @@ const Recipes = () => {
                 >
                     {/* Menu Items */}
                     <MenuItem onClick={() => handleMenuClick('/recipes')}>Home Page</MenuItem>
-                    <MenuItem onClick={() => handleMenuClick('/favorite-recipes')}>Favorite Recipes</MenuItem>
+                    <MenuItem onClick={() => handleMenuClick('/favorites')}>Favorite Recipes</MenuItem>
                     <MenuItem onClick={() => handleMenuClick('/cooking-history')}>Cooking History</MenuItem>
                     <MenuItem onClick={() => handleMenuClick('/account-settings')}>Account Settings</MenuItem>
                 </Menu>
@@ -483,18 +517,24 @@ const Recipes = () => {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <FavoriteBorder
-                      onClick={(e) => {
+                    <IconButton
+                        onClick={(e) => {
                         e.stopPropagation(); // Prevent triggering card click
-                        toggleFavorite(index); // Pass the index to toggle favorite
-                      }}
-                      style={{ color: favoriteRecipes[index] ? 'red' : 'gray', cursor: 'pointer' }} // Change color based on favorite status
-                  />
-                  <Timer fontSize="small" />
-                  <Typography variant="caption" color="#f20597">
-                                {recipe.time}
-                  </Typography>
-                </CardActions>
+                        toggleFavorite(recipe); // Use the correct recipe object
+                        }}
+                    >
+                        <FavoriteBorder
+                        style={{
+                            color: isFavorite(recipe) ? "red" : "gray",
+                            cursor: "pointer",
+                        }}
+                        />
+                    </IconButton>
+                    <Timer fontSize="small" />
+                    <Typography variant="caption" color="#f20597">
+                        {recipe.time}
+                    </Typography>
+                    </CardActions>
               </StyledCard>
             </Grid>
             ))}
@@ -526,7 +566,7 @@ const Recipes = () => {
     "& .MuiDialog-paper": {
       borderRadius: "12px",
       padding: "16px",
-      maxHeight: "80vh", // Control max height of the dialog
+      maxHeight: "80vh",
     },
   }}
 >
@@ -534,36 +574,22 @@ const Recipes = () => {
     <Box sx={{ display: "flex", gap: 2 }}>
       {/* Image Section */}
       <img
-            src={selectedRecipe?.image}
-            alt="Recipe Image"
-            style={{
-                width: "40%",       
-                height: "auto",     
-                borderRadius: "8px", 
-                objectFit: "cover", 
-                maxWidth: "100%",  
-            }}
-        />
+        src={selectedRecipe?.image}
+        alt={selectedRecipe?.title}
+        style={{
+          width: "40%",
+          height: "auto",
+          borderRadius: "8px",
+          objectFit: "cover",
+          maxWidth: "100%",
+        }}
+      />
 
       {/* Recipe Details Section */}
       <Box sx={{ flex: 1 }}>
         <Typography variant="h4" gutterBottom>
           {selectedRecipe?.title}
         </Typography>
-
-        {/* Dots representing rating */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          {[...Array(5)].map((_, index) => (
-            <img
-              key={index}
-              src={`${process.env.PUBLIC_URL}/assets/image%20${index + 11}.png`}
-              alt={`Dot ${index + 11}`}
-              width={22}
-              height={22}
-              style={{ transform: "scale(0.9)" }}
-            />
-          ))}
-        </Box>
 
         {/* Timer and Duration */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1, marginTop: 1 }}>
@@ -577,10 +603,16 @@ const Recipes = () => {
         <Button
           variant="outlined"
           startIcon={<FavoriteBorder />}
-          sx={{ marginTop: 1 }}
-          onClick = {toggleFavorite}
+          sx={{
+            marginTop: 1,
+            bgcolor: isFavorite(selectedRecipe) ? "#e6951c" : "transparent",
+            color: isFavorite(selectedRecipe) ? "white" : "black",
+            "&:hover": { bgcolor: "#e6951c", color: "white" },
+            borderColor: isFavorite(selectedRecipe) ? "#e6951c" : "black",
+          }}
+          onClick={() => toggleFavorite(selectedRecipe)}
         >
-          Save for later
+          {isFavorite(selectedRecipe) ? "Remove from Favorites" : "Save for Later"}
         </Button>
 
         {/* Recipe Description */}
@@ -589,18 +621,18 @@ const Recipes = () => {
         </Typography>
 
         {/* Ingredient List */}
-                            <Typography variant="subtitle1" sx={{ marginTop: 2, marginBottom: 0 }}>
-                                Ingredient List:
-                            </Typography>
-                            <ul style={{ marginTop: 0, paddingLeft: '20px' }}>
-                                {selectedRecipe?.ingredients?.map((ingredient, index) => (
-                                    <li key={index}>
-                                        <Typography variant="body2" color="textSecondary" component="span">
-                                            {ingredient}
-                                        </Typography>
-                                    </li>
-                                ))}
-                            </ul>
+        <Typography variant="subtitle1" sx={{ marginTop: 2, marginBottom: 0 }}>
+          Ingredient List:
+        </Typography>
+        <ul style={{ marginTop: 0, paddingLeft: "20px" }}>
+          {selectedRecipe?.ingredients?.map((ingredient, index) => (
+            <li key={index}>
+              <Typography variant="body2" color="textSecondary" component="span">
+                {ingredient}
+              </Typography>
+            </li>
+          ))}
+        </ul>
       </Box>
     </Box>
 
@@ -610,23 +642,21 @@ const Recipes = () => {
     {/* Scrollable Cooking Instructions */}
     <Box
       sx={{
-        maxHeight: "30vh", // Limit the height of this section
-        overflowY: "auto", // Enable vertical scrolling
-        paddingRight: 1, // Add padding for scrollbar clearance
+        maxHeight: "30vh",
+        overflowY: "auto",
+        paddingRight: 1,
       }}
     >
       <Typography variant="h5" gutterBottom>
         Cooking Instructions
       </Typography>
-      <Typography variant="body2">
-        <Box>
-            {selectedRecipe?.instructions?.map((step, index) => (
-            <Typography variant="body2" key={index} gutterBottom>
-                {step}
-            </Typography>
-            ))}
-        </Box>
-      </Typography>
+      <Box>
+        {selectedRecipe?.instructions?.map((step, index) => (
+          <Typography variant="body2" key={index} gutterBottom>
+            {step}
+          </Typography>
+        ))}
+      </Box>
     </Box>
   </DialogContent>
 
@@ -636,6 +666,7 @@ const Recipes = () => {
     </Button>
   </DialogActions>
 </Dialog>
+
 
   
         <Divider />
