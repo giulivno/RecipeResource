@@ -75,16 +75,61 @@ const CustomTextField = styled(TextField)({
 });
 
 const Favorites = () => {
-  const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [favorites, setFavorites] = useState([]);
+    const navigate = useNavigate();
+    const [searchTerm, setSearchTerm] = useState("");
+    const [anchorEl, setAnchorEl] = useState(null); // Declare anchorEl and setAnchorEl here
+    const [favorites, setFavorites] = useState([]);
 
-  // Load favorites from localStorage when the component mounts
-  useEffect(() => {
-    const savedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
-    setFavorites(savedFavorites);
-  }, []);
+    useEffect(() => {
+        localStorage.removeItem("favorites");
+        const savedFavorites = JSON.parse(localStorage.getItem("favorites")) || {};
+        const allRecipes = JSON.parse(localStorage.getItem("allRecipes")) || []; // Optional: Store all recipes globally
+        const favoriteRecipes = allRecipes.filter((_, index) => savedFavorites[index]);
+        setFavorites(favoriteRecipes); // Set the favorite recipes to display
+      }, []);
+
+    /*const [favorites] = useState([
+    {
+      title: "Recipe Title",
+      description: "Description of favorite recipe.",
+      image: `${process.env.PUBLIC_URL}/assets/Image.png`,
+    },
+    {
+      title: "Recipe Title",
+      description: "Description of favorite recipe.",
+      image: `${process.env.PUBLIC_URL}/assets/Image.png`,
+    },
+    {
+      title: "Recipe Title",
+      description: "Description of favorite recipe.",
+      image: `${process.env.PUBLIC_URL}/assets/Image.png`,
+    },
+    {
+      title: "Recipe Title",
+      description: "Description of favorite recipe.",
+      image: `${process.env.PUBLIC_URL}/assets/Image.png`,
+    },
+    {
+      title: "Recipe Title",
+      description: "Description of favorite recipe.",
+      image: `${process.env.PUBLIC_URL}/assets/Image.png`,
+    },
+    {
+      title: "Recipe Title",
+      description: "Description of favorite recipe.",
+      image: `${process.env.PUBLIC_URL}/assets/Image.png`,
+    },
+    {
+      title: "Recipe Title",
+      description: "Description of favorite recipe.",
+      image: `${process.env.PUBLIC_URL}/assets/Image.png`,
+    },
+    {
+      title: "Recipe Title",
+      description: "Description of favorite recipe.",
+      image: `${process.env.PUBLIC_URL}/assets/Image.png`,
+    },
+  ]);*/
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -107,6 +152,8 @@ const Favorites = () => {
     navigate(path);
     handleMenuClose();
   };
+
+  
 
   return (
     <Box
