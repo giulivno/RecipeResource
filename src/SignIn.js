@@ -58,6 +58,7 @@ const FormContainer = styled(Paper)(({ theme }) => ({
 
 // SignIn Component
 const SignIn = ({ onSignIn, onSignOut }) => {
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [anchorEl, setAnchorEl] = useState(null);
@@ -72,8 +73,8 @@ const SignIn = ({ onSignIn, onSignOut }) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        // TODO store user info
-        const emailPrefix = email.split('@')[0];
+
+        const emailPrefix = name;
 
         const userInfo = {
             email,
@@ -86,6 +87,7 @@ const SignIn = ({ onSignIn, onSignOut }) => {
 
         onSignIn();
 
+        setName('');
         setEmail('');
         setPassword('');
 
@@ -197,11 +199,29 @@ const SignIn = ({ onSignIn, onSignOut }) => {
 
         <Grid item xs={12} md={5} sx={{ marginRight: 2 }}>
           <FormContainer elevation={0} sx={{ width: '100%' }}>
-            {/* Email Label */}
+            {/* Name Label */}
             <Typography
               variant="body2"
               gutterBottom
               sx={{ marginBottom: '4px' }} // Reduce space between label and input
+            >
+              Full Name
+            </Typography>
+            <TextField
+              fullWidth
+              variant="outlined"
+              margin="dense" // Reduce padding inside the TextField
+              placeholder="Enter your full name"
+              name="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+
+            />
+            {/* Email Label */}
+            <Typography
+              variant="body2"
+              gutterBottom
+              sx={{ marginBottom: '4px', marginTop: '16px' }} // Reduce space between label and input
             >
               Email
             </Typography>

@@ -124,6 +124,6 @@ export const recipesData = [
             "Step 4: Garnish with Parmesan cheese and serve."
         ],
         rating: 4.3,
-        dietaryRestrictions: ["No meat"],
+        dietaryRestrictions: ["No meat", "No egg", "No nuts", "No shellfish"],
     },
 ];

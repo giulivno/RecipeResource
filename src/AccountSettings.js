@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, TextField, Typography, Button, IconButton, Menu, MenuItem, Avatar, Paper } from '@mui/material';
-import { Edit as EditIcon, Check as CheckIcon, Key as KeyIcon, Email as EmailIcon, Person as PersonIcon } from '@mui/icons-material';
+import { Edit as EditIcon, Check as CheckIcon, Key as KeyIcon, Email as EmailIcon, Person as PersonIcon, Settings as GearIcon } from '@mui/icons-material';
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/system";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -149,41 +149,50 @@ const AccountSettings = ({onSignOut }) => {
                     <MenuItem onClick={() => handleMenuClick('/cooking-history')}>Cooking History</MenuItem>
                     <MenuItem onClick={() => handleMenuClick('/account-settings')}>Account Settings</MenuItem>
                 </Menu>
-
-                <Logo src={`${process.env.PUBLIC_URL}/assets/Logo.png`} alt="Logo" />
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', pl: 7 }}>
+                    <Logo src={`${process.env.PUBLIC_URL}/assets/Logo.png`} alt="Logo" />
+                </Box>
             </Header>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Avatar sx={{ bgcolor: 'black', mr: 2 }}>
-                    <PersonIcon />
-                </Avatar>
-                <Typography variant="h3" sx={{ color: '#f5a623' }}>
+            <Box sx={{ justifyContent: 'left', display: 'flex', alignItems: 'center', mb: 2, pl: 76.5 }}>
+                
+                
+                <Typography variant="h3" sx={{
+                    fontFamily: "Nunito-Medium, Helvetica",
+                    fontWeight: "bold",
+                    color: '#EC8D58' }}>
                     Account Settings
                 </Typography>
+                <GearIcon sx={{ color: 'black', fontSize: 40, ml: 1.5 }} />
             </Box>
             {/* Name Section */}
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, gap: 2 }}>
-                <Paper elevation={2} sx={{ boxSizing: 'border-box', width: '55%', bgcolor:'#E3E3E3', padding: 3 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1, gap: 2 }}>
+                <Paper elevation={2} sx={{ boxSizing: 'border-box', width: '37%', bgcolor:'#E3E3E3', padding: 3 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 0, gap: 2 }}>
-                <PersonIcon sx={{ fontSize: 40, marginRight: 2 }} />
-                <Typography variant="h6" sx={{ marginRight: 2 }}>
-                    Name:
-                </Typography>
-                <TextField
-                    value={name}
-                    onChange={handleNameChange}
-                    variant="outlined"
-                    sx={{
-                        width: '300px',
-                        flex: 0.38,
-                        '.MuiOutlinedInput-root': {
-                            bgcolor: isNameEditable ? 'white' : '#f0f0f0', 
-                            borderRadius: 2,
-                        },
-                    }}
-                    InputProps={{
-                        readOnly: !isNameEditable, 
-                    }}
-                />
+                        <Avatar sx={{ bgcolor: 'black', mr: 1.8 }}>
+                            <PersonIcon />
+                        </Avatar>
+                        {!isNameEditable ? (
+                            <Typography variant="h4" sx={{ fontFamily: "Nunito, Helvetica", marginRight: 1 }}>
+                                {name}
+                            </Typography>
+                        ) : (
+
+                            <TextField
+                                value={name}
+                                onChange={handleNameChange}
+                                variant="outlined"
+                                sx={{
+                                    width: '300px',
+                                    flex: 0.84,
+                                    '.MuiOutlinedInput-root': {
+                                        bgcolor: isNameEditable ? 'white' : '#f0f0f0',
+                                        borderRadius: 2,
+                                    },
+                                }}
+                                InputProps={{
+                                    readOnly: !isNameEditable,
+                                }}
+                            />)}
                 <IconButton onClick={toggleNameEdit}>
                     {isNameEditable ? <CheckIcon /> : <EditIcon />}
                 </IconButton>
@@ -192,11 +201,11 @@ const AccountSettings = ({onSignOut }) => {
                 </Box>
 
             {/* Email Section */}
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
-                <Paper elevation={2} sx={{ width: '55%', padding: 3 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 3, gap: 2 }}>
+                <Paper elevation={2} sx={{ width: '37%', padding: 3 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
                 <EmailIcon sx={{ fontSize: 40, marginRight: 2 }} />
-                <Typography variant="h6" sx={{ marginRight: 2 }}>
+                        <Typography variant="h5" sx={{ fontFamily: "Nunito, Helvetica", marginRight: 1 }}>
                     Email:
                 </Typography>
                 <TextField
@@ -205,7 +214,7 @@ const AccountSettings = ({onSignOut }) => {
                     variant="outlined"
                     sx={{
                         width: '300px',
-                        flex: 0.38,
+                        flex: 0.8,
                         '.MuiOutlinedInput-root': {
                             bgcolor: isEmailEditable ? 'transparent' : '#f0f0f0', 
                             borderRadius: 2,

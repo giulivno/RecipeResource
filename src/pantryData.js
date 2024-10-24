@@ -18,9 +18,7 @@ export const pantryData = {
         "Mushrooms",
         "Garlic",
         "Sweet potatoes",
-        "Black beans",
-        "Potatoes",
-        "Zucchini"
+        "Black beans"        
     ],
     meats: [
         "Chicken breast",
