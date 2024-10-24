@@ -31,11 +31,7 @@ import {
   MenuItem
 } from "@mui/material";
 import { styled } from "@mui/system";
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { recipesData } from "./recipesData";
-import { pantryData } from "./pantryData";
-
+import React, { useState } from "react";
 
 // Restrictions Component
 const Restrictions = () => {
@@ -306,50 +302,6 @@ const Recipes = () => {
     // State to control the dialog visibility
     const [open, setOpen] = useState(false);
     const [selectedRecipe, setSelectedRecipe] = useState(null); // Store selected recipe info
-
-    // Update favorite state to track favorites for each recipe
-    const [favorites, setFavorites] = useState(() => {
-        try {
-          const storedFavorites = JSON.parse(localStorage.getItem("favorites"));
-          return storedFavorites || [];
-        } catch (error) {
-          console.error("Failed to parse favorites from localStorage", error);
-          return [];
-        }
-      });
-
-    // Sync favorites with localStorage whenever it changes
-    useEffect(() => {
-        localStorage.setItem("favorites", JSON.stringify(favorites));
-    }, [favorites]);
-
-    // Toggle the favorite status of a recipe
-    const toggleFavorite = (recipe) => {
-        const isAlreadyFavorite = favorites.some((fav) => fav.id === recipe.id);
-      
-        // Create a sanitized version of the recipe with only necessary properties
-        const sanitizedRecipe = {
-          id: recipe.id,
-          title: recipe.title,
-          description: recipe.description,
-          image: recipe.image,
-          time: recipe.time,
-          ingredients: recipe.ingredients,
-          instructions: recipe.instructions,
-        };
-      
-        const updatedFavorites = isAlreadyFavorite
-          ? favorites.filter((fav) => fav.id !== recipe.id) // Remove if already a favorite
-          : [...favorites, sanitizedRecipe]; // Add sanitized recipe
-      
-        setFavorites(updatedFavorites);
-      };
-
-    // Check if a recipe is a favorite
-    const isFavorite = (recipe) => {
-        if (!recipe) return false; // Return false if recipe is null or undefined
-        return favorites.some((fav) => fav.id === recipe.id);
-      };
   
     const handleSearch = (event) => {
       setSearchTerm(event.target.value);
@@ -400,37 +352,16 @@ const Recipes = () => {
       >
         {/* Header Section */}
         <Header>
-                <IconButton
-                    sx={{
-                        position: "absolute",
-                        top: "50%",
-                        right: "16px",
-                        transform: "translateY(-50%)",
-                    }}
-                    onClick={handleMenuOpen}
-
-                >
-                    <MenuIcon /> 
-                </IconButton>
-                <Menu
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={handleMenuClose}
-                    anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                >
-                    {/* Menu Items */}
-                    <MenuItem onClick={() => handleMenuClick('/recipes')}>Home Page</MenuItem>
-                    <MenuItem onClick={() => handleMenuClick('/favorites')}>Favorite Recipes</MenuItem>
-                    <MenuItem onClick={() => handleMenuClick('/cooking-history')}>Cooking History</MenuItem>
-                    <MenuItem onClick={() => handleMenuClick('/account-settings')}>Account Settings</MenuItem>
-                </Menu>
+          <IconButton
+            sx={{
+              position: "absolute",
+              top: "50%",
+              right: "16px",
+              transform: "translateY(-50%)",
+            }}
+          >
+            <MenuIcon /> {/* Hamburger menu icon */}
+          </IconButton>
           <Logo src={`${process.env.PUBLIC_URL}/assets/Logo.png`} alt="Logo" />
         </Header>
   
@@ -516,24 +447,12 @@ const Recipes = () => {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                    <IconButton
-                        onClick={(e) => {
-                        e.stopPropagation(); // Prevent triggering card click
-                        toggleFavorite(recipe); // Use the correct recipe object
-                        }}
-                    >
-                        <FavoriteBorder
-                        style={{
-                            color: isFavorite(recipe) ? "red" : "gray",
-                            cursor: "pointer",
-                        }}
-                        />
-                    </IconButton>
-                    <Timer fontSize="small" />
-                    <Typography variant="caption" color="#f20597">
-                        {recipe.time}
-                    </Typography>
-                    </CardActions>
+                  <FavoriteBorder />
+                  <Timer fontSize="small" />
+                  <Typography variant="caption" color="#f20597">
+                    20 min
+                  </Typography>
+                </CardActions>
               </StyledCard>
             </Grid>
             ))}
@@ -574,13 +493,11 @@ const Recipes = () => {
       {/* Image Section */}
       <img
         src={selectedRecipe?.image}
-        alt={selectedRecipe?.title}
+        alt="Recipe Image"
         style={{
           width: "40%",
           height: "auto",
           borderRadius: "8px",
-          objectFit: "cover",
-          maxWidth: "100%",
         }}
       />
 
@@ -602,16 +519,9 @@ const Recipes = () => {
         <Button
           variant="outlined"
           startIcon={<FavoriteBorder />}
-          sx={{
-            marginTop: 1,
-            bgcolor: isFavorite(selectedRecipe) ? "#e6951c" : "transparent",
-            color: isFavorite(selectedRecipe) ? "white" : "black",
-            "&:hover": { bgcolor: "#e6951c", color: "white" },
-            borderColor: isFavorite(selectedRecipe) ? "#e6951c" : "black",
-          }}
-          onClick={() => toggleFavorite(selectedRecipe)}
+          sx={{ marginTop: 1 }}
         >
-          {isFavorite(selectedRecipe) ? "Remove from Favorites" : "Save for Later"}
+          Save for later
         </Button>
 
         {/* Recipe Description */}
@@ -620,18 +530,15 @@ const Recipes = () => {
         </Typography>
 
         {/* Ingredient List */}
-        <Typography variant="subtitle1" sx={{ marginTop: 2, marginBottom: 0 }}>
+        <Typography variant="subtitle1" sx={{ marginTop: 2 }}>
           Ingredient List:
         </Typography>
-        <ul style={{ marginTop: 0, paddingLeft: "20px" }}>
-          {selectedRecipe?.ingredients?.map((ingredient, index) => (
-            <li key={index}>
-              <Typography variant="body2" color="textSecondary" component="span">
-                {ingredient}
-              </Typography>
-            </li>
-          ))}
-        </ul>
+        <Typography variant="body2" color="textSecondary">
+          {/* Example ingredient list - replace with dynamic content */}
+          - 1 cup flour <br />
+          - 2 eggs <br />
+          - 1/2 cup sugar
+        </Typography>
       </Box>
     </Box>
 
@@ -649,13 +556,17 @@ const Recipes = () => {
       <Typography variant="h5" gutterBottom>
         Cooking Instructions
       </Typography>
-      <Box>
-        {selectedRecipe?.instructions?.map((step, index) => (
-          <Typography variant="body2" key={index} gutterBottom>
-            {step}
-          </Typography>
-        ))}
-      </Box>
+      <Typography variant="body2">
+        Step 1: Preheat the oven to 350°F (175°C). <br />
+        Step 2: Mix the flour, sugar, and eggs in a bowl. <br />
+        Step 3: Pour the mixture into a baking pan and smooth the top. <br />
+        Step 4: Bake for 20 minutes or until golden brown. <br />
+        Step 5: Let cool before serving. Enjoy! <br />
+        {/* Add more steps to test scrolling behavior */}
+        Step 6: Optional - add frosting or toppings of choice. <br />
+        Step 7: Store any leftovers in the refrigerator for up to 5 days. <br />
+        Step 8: Reheat in the oven at 300°F for 5-10 minutes if desired.
+      </Typography>
     </Box>
   </DialogContent>
 

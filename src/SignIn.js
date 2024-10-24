@@ -57,11 +57,7 @@ const FormContainer = styled(Paper)(({ theme }) => ({
 }));
 
 // SignIn Component
-const SignIn = ({ onSignIn, onSignOut }) => {
-<<<<<<< HEAD
-    const [name, setName] = useState('');
-=======
->>>>>>> af0b609 (Added Cooking History Page)
+const SignIn = ({ onSignIn }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [anchorEl, setAnchorEl] = useState(null);
@@ -82,8 +78,6 @@ const SignIn = ({ onSignIn, onSignOut }) => {
 =======
         // TODO store user info
         const emailPrefix = email.split('@')[0];
->>>>>>> af0b609 (Added Cooking History Page)
-
         const userInfo = {
             email,
             password,
