@@ -161,7 +161,8 @@ const SignIn = ({ onSignIn, onSignOut }) => {
                   }}
               >
                   {/* Menu Items */}
-                  <MenuItem onClick={() => handleMenuClick('/recipes')}>Home Page</MenuItem>
+                  <MenuItem onClick={() => handleMenuClick('/DesignA')}>Design A</MenuItem>
+                  <MenuItem onClick={() => handleMenuClick('/DesignB')}>Design B</MenuItem>
                   <MenuItem onClick={() => handleMenuClick('/favorite-recipes')}>Favorite Recipes</MenuItem>
                   <MenuItem onClick={() => handleMenuClick('/cooking-history')}>Cooking History</MenuItem>
                   <MenuItem onClick={() => handleMenuClick('/account-settings')}>Account Settings</MenuItem>

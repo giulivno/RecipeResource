@@ -168,7 +168,8 @@ const CookingHistory = () => {
             anchorOrigin={{ vertical: "top", horizontal: "right" }}
             transformOrigin={{ vertical: "top", horizontal: "right" }}
           >
-            <MenuItem onClick={() => handleMenuClick("/recipes")}>Home Page</MenuItem>
+            <MenuItem onClick={() => handleMenuClick("/DesignA")}>Design A</MenuItem>
+            <MenuItem onClick={() => handleMenuClick("/DesignB")}>Desgin B</MenuItem>
             <MenuItem onClick={() => handleMenuClick("/favorites")}>Favorite Recipes</MenuItem>
             <MenuItem onClick={() => handleMenuClick("/cooking-history")}>Cooking History</MenuItem>
             <MenuItem onClick={() => handleMenuClick("/account-settings")}>Account Settings</MenuItem>

@@ -193,8 +193,11 @@ const Favorites = () => {
             horizontal: "right",
           }}
         >
-          <MenuItem onClick={() => handleMenuClick("/recipes")}>
-            Home Page
+          <MenuItem onClick={() => handleMenuClick("/DesignA")}>
+            Design A
+          </MenuItem>
+          <MenuItem onClick={() => handleMenuClick("/DesignB")}>
+            Design B
           </MenuItem>
           <MenuItem onClick={() => handleMenuClick("/favorites")}>
             Favorite Recipes

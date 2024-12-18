@@ -3,7 +3,8 @@ import React, { useState, useEffect } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline"; // Optional: Reset CSS styles
 import SignIn from "./SignIn";
-import Recipes from './Recipes';
+import DesignA from './DesignA';
+import DesignB from './DesignB';
 import Favorites from "./Favorites";
 import CookingHistory from "./CookingHistory";
 import AccountSettings from "./AccountSettings";
@@ -55,11 +56,12 @@ function App() {
                       <Route path="*" element={<SignIn onSignIn={handleSignIn} />} />
                   ) : (
                       <>
-                          <Route path="/recipes" element={<Recipes />} />
+                          <Route path="/DesignA" element={<DesignA />} />
+                          {<Route path="/DesignB" element={<DesignB />} />}
                           {<Route path="/favorites" element={<Favorites />} />}
                           {<Route path="/cooking-history" element={<CookingHistory />} />}
                               <Route path="/account-settings" element={<AccountSettings onSignOut={handleSignOut} />} />
-                          <Route path="*" element={<Navigate to="/recipes" />} />
+                          <Route path="*" element={<Navigate to="/DesignA" />} />
                       </>
                   )}
               </Routes>
