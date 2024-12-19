@@ -35,16 +35,16 @@ const Pantry = ({ selectedPantryItems, setSelectedPantryItems }) => {
   // Map pantryData to render categories and items
   return (
     <Box
-      sx={{
-        width: "300px",
-        padding: 2,
-        bgcolor: "white",
-        borderRadius: "4px",
-        border: 1,
-        borderColor: "#303030",
-        boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-      }}
-    >
+  sx={{
+    width: "100%",
+    padding: 1,                // Reduced padding
+    fontSize: "0.75rem",       // Smaller font size
+    borderRadius: "4px",
+    border: 1,
+    borderColor: "#303030",
+    boxShadow: "0 0 4px rgba(0, 0, 0, 0.1)", // Lighter shadow
+  }}
+>
       <Typography
         variant="h4"
         sx={{

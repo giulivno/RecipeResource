@@ -3,21 +3,28 @@ import { Box, Button, TextField } from "@mui/material";
 import { CustomTextField } from "../styles"; // Ensure the path to CustomTextField is correct
 
 const SearchBar = ({ searchTerm, handleSearch, handleFilter, handleReset }) => {
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleFilter();
+    }
+  };
+  
   return (
     <Box
-      sx={{
-        width: "1100px",
-        marginTop: 4,
-        marginLeft: "90px",
-        display: "flex",
-        alignItems: "center",
-        gap: 2,
-      }}
-    >
+  sx={{
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    gap: 2,
+    marginTop: 4,
+    
+  }}
+>
       {/* Custom Text Field for Search Input */}
       <CustomTextField
         value={searchTerm}
         onChange={handleSearch}
+        onKeyDown={handleKeyDown}
         variant="standard"
         placeholder="Search Recipes"
         fullWidth
@@ -38,6 +45,7 @@ const SearchBar = ({ searchTerm, handleSearch, handleFilter, handleReset }) => {
           borderRadius: "4px",
         }}
         onClick={handleFilter}
+        
       >
         Search
       </Button>

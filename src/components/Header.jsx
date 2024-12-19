@@ -11,7 +11,7 @@ const HeaderBox = styled(Box)(({ theme }) => ({
   alignItems: "center",
   justifyContent: "center",
   padding: theme.spacing(2),
-  width: "100%",
+  width: "100%",          // Ensure full width
   position: "fixed",
   top: 0,
   left: 0,
@@ -21,9 +21,9 @@ const HeaderBox = styled(Box)(({ theme }) => ({
 }));
 
 const Logo = styled("img")({
-  width: "504px",
-  height: "72px",
-  objectFit: "cover",
+  width: "100%",       // Make the width responsive
+  maxWidth: "300px",   // Set a reasonable max width
+  height: "auto",      // Maintain aspect ratio
 });
 
 const Header = ({ handleMenuOpen, anchorEl, handleMenuClose, handleMenuClick }) => (

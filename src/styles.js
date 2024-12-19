@@ -5,13 +5,15 @@ import { Card, Divider, TextField } from "@mui/material";
 // Styled Card with hover effect
 export const StyledCard = styled(Card)(({ theme }) => ({
   width: "100%",
-  height: 320,
+  height: "100%",          // Ensure card takes full height within the grid
   bgcolor: "neutral.100",
   border: "1px solid #000000",
   display: "flex",
   flexDirection: "column",
   justifyContent: "space-between",
-  padding: "8px",
+  padding: "0px",
+  boxSizing: "border-box", // Ensure padding is included in height calculation
+  margin: "10px",            // Add margin to prevent cutting off on hover
   cursor: "pointer",
   transition: "transform 0.3s, box-shadow 0.3s",
   "&:hover": {

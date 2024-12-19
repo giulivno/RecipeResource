@@ -17,8 +17,9 @@ const RecipeCard = ({ recipe, handleOpen, toggleFavorite, isFavorite }) => (
       height="150"
       image={recipe.image}
       alt="Recipe Image"
+      sx={{ objectFit: "cover" }} // Ensure the image covers the area
     />
-    <CardContent>
+    <CardContent sx={{ padding: "8px", flexGrow: 1 }}> {/* Reduced padding */}
       <Typography variant="h6" color="#1d1b20">
         {recipe.title}
       </Typography>

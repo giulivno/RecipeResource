@@ -33,7 +33,7 @@ const RecipeDialog = ({
         "& .MuiDialog-paper": {
           borderRadius: "12px",
           padding: "16px",
-          maxHeight: "80vh",
+          maxHeight: "90vh", // Limit dialog height to 90% of viewport height
         },
       }}
     >
@@ -41,24 +41,24 @@ const RecipeDialog = ({
       <DialogTitle>{recipe?.title}</DialogTitle>
 
       <DialogContent>
-        <Box sx={{ display: "flex", gap: 2 }}>
+        <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
           {/* Image Section */}
           <CardMedia
             component="img"
             src={recipe?.image}
             alt={recipe?.title}
             sx={{
-              width: "40%",
-              height: "auto",
+              width: "100%",
+              maxWidth: "300px", // Limit image width
+              height: "200px",   // Set fixed height for image
               borderRadius: "8px",
               objectFit: "cover",
-              maxWidth: "100%",
             }}
           />
 
           {/* Recipe Details Section */}
-          <Box sx={{ flex: 1 }}>
-            <Typography variant="h5" gutterBottom>
+          <Box sx={{ flex: 1, minWidth: "250px" }}>
+            <Typography variant="h6" gutterBottom>
               {recipe?.title}
             </Typography>
 
@@ -100,57 +100,58 @@ const RecipeDialog = ({
                 {isCooked(recipe) ? "Remove from History" : "Already Cooked?"}
               </Button>
             </Box>
-
-            {/* Ingredients and Missing Ingredients Side-by-Side */}
-            <Box sx={{ display: "flex", gap: 4, marginTop: 3 }}>
-              {/* Ingredients List */}
-              <Box sx={{ flex: 1 }}>
-                <Typography variant="h6">Ingredients:</Typography>
-                <List>
-                  {recipe?.ingredients?.map((ingredient, index) => (
-                    <ListItem key={index} sx={{ paddingLeft: 0 }}>
-                      <Typography variant="body2">{ingredient}</Typography>
-                    </ListItem>
-                  ))}
-                </List>
-              </Box>
-
-              {/* Missing Ingredients List */}
-              {recipe?.missingIngredients?.length > 0 && (
-                <Box sx={{ flex: 1 }}>
-                  <Typography variant="h6" color="error">
-                    Missing Ingredients:
-                  </Typography>
-                  <List>
-                    {recipe.missingIngredients.map((missing, index) => (
-                      <ListItem key={index} sx={{ paddingLeft: 0 }}>
-                        <Typography variant="body2" color="error">
-                          {missing}
-                        </Typography>
-                      </ListItem>
-                    ))}
-                  </List>
-                </Box>
-              )}
-            </Box>
           </Box>
         </Box>
 
         {/* Divider Line */}
         <Divider sx={{ marginY: 2 }} />
 
-        {/* Scrollable Cooking Instructions */}
-        <Box sx={{ maxHeight: "30vh", overflowY: "auto", paddingRight: 1 }}>
-          <Typography variant="h5" gutterBottom>
-            Cooking Instructions
-          </Typography>
-          <Box>
-            {recipe?.instructions?.map((step, index) => (
-              <Typography variant="body2" key={index} gutterBottom>
-                {step}
-              </Typography>
-            ))}
+        {/* Ingredients and Missing Ingredients Side-by-Side */}
+        <Box sx={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+          {/* Ingredients List */}
+          <Box sx={{ flex: 1, minWidth: "200px" }}>
+            <Typography variant="h6">Ingredients:</Typography>
+            <List dense>
+              {recipe?.ingredients?.map((ingredient, index) => (
+                <ListItem key={index} sx={{ paddingLeft: 0 }}>
+                  <Typography variant="body2">{ingredient}</Typography>
+                </ListItem>
+              ))}
+            </List>
           </Box>
+
+          {/* Missing Ingredients List */}
+          {recipe?.missingIngredients?.length > 0 && (
+            <Box sx={{ flex: 1, minWidth: "200px" }}>
+              <Typography variant="h6" color="error">
+                Missing Ingredients:
+              </Typography>
+              <List dense>
+                {recipe.missingIngredients.map((missing, index) => (
+                  <ListItem key={index} sx={{ paddingLeft: 0 }}>
+                    <Typography variant="body2" color="error">
+                      {missing}
+                    </Typography>
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
+          )}
+        </Box>
+
+        {/* Divider Line */}
+        <Divider sx={{ marginY: 2 }} />
+
+        {/* Cooking Instructions */}
+        <Box>
+          <Typography variant="h6" gutterBottom>
+            Cooking Instructions:
+          </Typography>
+          {recipe?.instructions?.map((step, index) => (
+            <Typography variant="body2" key={index} gutterBottom>
+              {step}
+            </Typography>
+          ))}
         </Box>
       </DialogContent>
 
