@@ -12,14 +12,13 @@ import {
   IconButton,
 } from "@mui/material";
 import { ExpandMore as ExpandMoreIcon, Search } from "@mui/icons-material";
-import { pantryData } from "../data/pantryData"; // Import pantryData
+import { pantryData } from "../data/pantryData";
 
-const Pantry = ({
+const PantryB = ({
   selectedPantryItems,
   setSelectedPantryItems,
   searchPantry = "",
   setSearchPantry,
-  handleFilter,
 }) => {
   const [openItems, setOpenItems] = useState({});
 
@@ -36,22 +35,20 @@ const Pantry = ({
 
       return { ...prev, [category]: updatedCategory };
     });
+    
   };
 
-  // Gather all ingredients into a flat array
-  const allIngredients = Object.entries(pantryData).reduce((acc, [category, items]) => {
+  // Flatten pantryData for search
+  const allIngredients = Object.entries(pantryData).reduce((acc, [cat, items]) => {
     return [
       ...acc,
-      ...items.map((item) => ({
-        category,
-        item,
-      })),
+      ...items.map((it) => ({ category: cat, item: it })),
     ];
   }, []);
 
-  // Safely filter ingredients based on searchPantry
+  // Filter by searchPantry text
   const filteredIngredients = allIngredients.filter(({ item }) =>
-    item?.toLowerCase().includes(searchPantry?.toLowerCase() || "")
+    item.toLowerCase().includes(searchPantry.toLowerCase())
   );
 
   return (
@@ -92,14 +89,11 @@ const Pantry = ({
             style: { backgroundColor: "#e2e2e2", paddingLeft: "10px", borderRadius: "4px" },
           }}
         />
-        <IconButton onClick={handleFilter}>
-          <Search />
-        </IconButton>
+        
       </Box>
 
       <List>
         {searchPantry ? (
-          // If user is searching, show only filtered ingredients
           filteredIngredients.map(({ category, item }) => (
             <ListItem
               key={item}
@@ -115,7 +109,6 @@ const Pantry = ({
             </ListItem>
           ))
         ) : (
-          // Otherwise, display categories, collapsed/expanded
           Object.entries(pantryData).map(([category, items], index) => (
             <Box key={index}>
               <ListItemButton
@@ -135,9 +128,7 @@ const Pantry = ({
                   }}
                 />
                 <ListItemIcon>
-                  <ExpandMoreIcon
-                    sx={{ color: openItems[index] ? "#f20597" : "#313043" }}
-                  />
+                  <ExpandMoreIcon sx={{ color: openItems[index] ? "#f20597" : "#313043" }} />
                 </ListItemIcon>
               </ListItemButton>
               <Collapse in={openItems[index]} timeout="auto" unmountOnExit>
@@ -168,4 +159,4 @@ const Pantry = ({
   );
 };
 
-export default Pantry;
+export default PantryB;

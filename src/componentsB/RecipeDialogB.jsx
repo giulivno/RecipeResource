@@ -7,14 +7,19 @@ import {
   Button,
   Typography,
   Box,
-  Divider,
   List,
   ListItem,
   CardMedia,
+  Divider,
 } from "@mui/material";
 import { FavoriteBorder, Timer } from "@mui/icons-material";
 
-const RecipeDialog = ({
+
+function capitalizeFirst(str = "") {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+const RecipeDialogB = ({
   open,
   handleClose,
   recipe,
@@ -22,7 +27,17 @@ const RecipeDialog = ({
   isFavorite,
   toggleCookingHistory,
   isCooked,
+  pantryItems = {}, 
 }) => {
+  if (!recipe) return null; 
+
+  // Flatten pantry items into a single array 
+  const selectedPantryItems = Object.values(pantryItems)
+    .flat()
+    .map((item) => item.toLowerCase());
+
+  const missingIngredients = recipe.missingIngredients || [];
+
   return (
     <Dialog
       open={open}
@@ -33,37 +48,40 @@ const RecipeDialog = ({
         "& .MuiDialog-paper": {
           borderRadius: "12px",
           padding: "16px",
-          maxHeight: "90vh", // Limit dialog height to 90% of viewport height
+          maxHeight: "90vh",
         },
       }}
     >
-      {/* Dialog Title */}
+      {/* ===== Dialog Title ===== */}
       <DialogTitle>{recipe?.title}</DialogTitle>
 
       <DialogContent>
+        {/* ===== Top Section: Image + Basic Details ===== */}
         <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-          {/* Image Section */}
-          <CardMedia
-            component="img"
-            src={recipe?.image}
-            alt={recipe?.title}
-            sx={{
-              width: "100%",
-              maxWidth: "300px", // Limit image width
-              height: "200px",   // Set fixed height for image
-              borderRadius: "8px",
-              objectFit: "cover",
-            }}
-          />
+          {/* Image */}
+          {recipe?.image && (
+            <CardMedia
+              component="img"
+              src={recipe.image}
+              alt={recipe.title}
+              sx={{
+                width: "100%",
+                maxWidth: "300px",
+                height: "200px",
+                borderRadius: "8px",
+                objectFit: "cover",
+              }}
+            />
+          )}
 
-          {/* Recipe Details Section */}
+          {/* Recipe Info */}
           <Box sx={{ flex: 1, minWidth: "250px" }}>
             <Typography variant="h6" gutterBottom>
               {recipe?.title}
             </Typography>
 
             {/* Timer and Duration */}
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1, marginTop: 1 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}>
               <Timer fontSize="small" />
               <Typography variant="body2" color="textSecondary">
                 {recipe?.time}
@@ -71,7 +89,7 @@ const RecipeDialog = ({
             </Box>
 
             {/* Save for Later and Already Cooked Buttons */}
-            <Box sx={{ display: "flex", gap: 2, marginTop: 2 }}>
+            <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
               <Button
                 variant="outlined"
                 startIcon={<FavoriteBorder />}
@@ -103,34 +121,41 @@ const RecipeDialog = ({
           </Box>
         </Box>
 
-        {/* Divider Line */}
-        <Divider sx={{ marginY: 2 }} />
-
-        {/* Ingredients and Missing Ingredients Side-by-Side */}
-        <Box sx={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-          {/* Ingredients List */}
+        {/* ===== Ingredients and Missing Ingredients Side-by-Side ===== */}
+        <Box sx={{ display: "flex", gap: 4, mt: 3 }}>
+          {/* Left Column: Ingredients */}
           <Box sx={{ flex: 1, minWidth: "200px" }}>
             <Typography variant="h6">Ingredients:</Typography>
             <List dense>
-              {recipe?.ingredients?.map((ingredient, index) => (
-                <ListItem key={index} sx={{ paddingLeft: 0 }}>
-                  <Typography variant="body2">{ingredient}</Typography>
-                </ListItem>
-              ))}
+              {recipe?.ingredients?.map((ingredient, index) => {
+                const isInPantry = selectedPantryItems.includes(
+                  ingredient.toLowerCase()
+                ); // Case-insensitive check
+                return (
+                  <ListItem key={index} sx={{ paddingLeft: 0 }}>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: isInPantry ? "green" : "gray" }}
+                    >
+                      {capitalizeFirst(ingredient)}
+                    </Typography>
+                  </ListItem>
+                );
+              })}
             </List>
           </Box>
 
-          {/* Missing Ingredients List */}
-          {recipe?.missingIngredients?.length > 0 && (
+          {/* Right Column: Missing Ingredients */}
+          {missingIngredients.length > 0 && (
             <Box sx={{ flex: 1, minWidth: "200px" }}>
               <Typography variant="h6" color="error">
                 Missing Ingredients:
               </Typography>
               <List dense>
-                {recipe.missingIngredients.map((missing, index) => (
+                {missingIngredients.map((missing, index) => (
                   <ListItem key={index} sx={{ paddingLeft: 0 }}>
                     <Typography variant="body2" color="error">
-                      {missing}
+                      {capitalizeFirst(missing)}
                     </Typography>
                   </ListItem>
                 ))}
@@ -139,20 +164,22 @@ const RecipeDialog = ({
           )}
         </Box>
 
-        {/* Divider Line */}
-        <Divider sx={{ marginY: 2 }} />
-
-        {/* Cooking Instructions */}
-        <Box>
-          <Typography variant="h6" gutterBottom>
-            Cooking Instructions:
-          </Typography>
-          {recipe?.instructions?.map((step, index) => (
-            <Typography variant="body2" key={index} gutterBottom>
-              {step}
-            </Typography>
-          ))}
-        </Box>
+        {/* ===== Cooking Instructions ===== */}
+        {recipe?.instructions && (
+          <>
+            <Divider sx={{ my: 2 }} />
+            <Box>
+              <Typography variant="h6" gutterBottom>
+                Cooking Instructions:
+              </Typography>
+              {recipe.instructions.map((step, index) => (
+                <Typography variant="body2" key={index} gutterBottom>
+                  {step}
+                </Typography>
+              ))}
+            </Box>
+          </>
+        )}
       </DialogContent>
 
       <DialogActions>
@@ -164,4 +191,4 @@ const RecipeDialog = ({
   );
 };
 
-export default RecipeDialog;
+export default RecipeDialogB;

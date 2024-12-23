@@ -11,7 +11,7 @@ const RecipeNavigation = ({ prevRecipe, nextRecipe, children }) => {
         alignItems: "center",
         justifyContent: "space-between",
         width: "100%",
-        maxWidth: "800px", // Adjust to fit the recipe card width
+        maxWidth: "800px", 
         margin: "0 auto",
       }}
     >
@@ -39,7 +39,7 @@ const RecipeNavigation = ({ prevRecipe, nextRecipe, children }) => {
       {/* Recipe Card in the Center */}
       <Box
         sx={{
-          flex: 1, // Allow the card to take up the central space
+          flex: 1, 
           display: "flex",
           justifyContent: "center",
           alignItems: "center",

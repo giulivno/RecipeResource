@@ -21,9 +21,9 @@ const HeaderBox = styled(Box)(({ theme }) => ({
 }));
 
 const Logo = styled("img")({
-  width: "100%",       // Make the width responsive
-  maxWidth: "300px",   // Set a reasonable max width
-  height: "auto",      // Maintain aspect ratio
+  width: "100%",       
+  maxWidth: "300px",   
+  height: "auto",      
 });
 
 const Header = ({ handleMenuOpen, anchorEl, handleMenuClose, handleMenuClick }) => (

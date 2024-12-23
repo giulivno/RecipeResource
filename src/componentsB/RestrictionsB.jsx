@@ -1,28 +1,11 @@
 import React from "react";
-import { Box, Grid, Typography, IconButton } from "@mui/material";
-import { styled } from "@mui/system";
-import Search from "@mui/icons-material/Search";
+import { Box, Grid, Typography, TextField } from "@mui/material";
 
-// Custom TextField styling
-const CustomTextField = styled("input")({
-  width: "100%",
-  height: "36px",
-  padding: "0 10px",
-  borderRadius: "4px",
-  border: "1px solid #ccc",
-  fontSize: "14px",
-  "&:focus": {
-    outline: "none",
-    borderColor: "#f5a623",
-  },
-});
-
-const Restrictions = ({
+const RestrictionsB = ({
   selectedRestrictions,
   setSelectedRestrictions,
-  searchRestrictions,      // string state passed in
-  setSearchRestrictions,   // setter function passed in
-  handleFilter,
+  searchRestrictions,
+  setSearchRestrictions,
 }) => {
   const restrictionOptions = [
     "No meat",
@@ -36,9 +19,7 @@ const Restrictions = ({
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
     setSelectedRestrictions((prev) =>
-      checked
-        ? [...prev, name]
-        : prev.filter((restriction) => restriction !== name)
+      checked ? [...prev, name] : prev.filter((r) => r !== name)
     );
   };
 
@@ -67,19 +48,22 @@ const Restrictions = ({
         Restrictions
       </Typography>
 
-      {/* Search input + icon */}
+      {/* Search Field Matching PantryB Styling */}
       <Box sx={{ display: "flex", alignItems: "center", gap: 1, marginBottom: 2 }}>
-        <CustomTextField
+        <TextField
           value={searchRestrictions}
           onChange={(e) => setSearchRestrictions(e.target.value)}
+          variant="standard"
           placeholder="Search Restrictions"
+          fullWidth
+          InputProps={{
+            disableUnderline: true,
+            style: { backgroundColor: "#e2e2e2", paddingLeft: "10px", borderRadius: "4px" },
+          }}
         />
-        <IconButton onClick={handleFilter}>
-          <Search />
-        </IconButton>
       </Box>
 
-      {/* Checkbox options */}
+      {/* Restrictions Options */}
       <Grid container spacing={2}>
         {restrictionOptions
           .filter((option) =>
@@ -113,4 +97,4 @@ const Restrictions = ({
   );
 };
 
-export default Restrictions;
+export default RestrictionsB;

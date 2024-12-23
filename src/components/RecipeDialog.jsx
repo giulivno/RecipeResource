@@ -33,7 +33,7 @@ const RecipeDialog = ({
         "& .MuiDialog-paper": {
           borderRadius: "12px",
           padding: "16px",
-          maxHeight: "90vh", // Limit dialog height to 90% of viewport height
+          maxHeight: "90vh",
         },
       }}
     >
@@ -49,8 +49,8 @@ const RecipeDialog = ({
             alt={recipe?.title}
             sx={{
               width: "100%",
-              maxWidth: "300px", // Limit image width
-              height: "200px",   // Set fixed height for image
+              maxWidth: "300px", 
+              height: "200px",  
               borderRadius: "8px",
               objectFit: "cover",
             }}
@@ -72,19 +72,21 @@ const RecipeDialog = ({
 
             {/* Save for Later and Already Cooked Buttons */}
             <Box sx={{ display: "flex", gap: 2, marginTop: 2 }}>
-              <Button
-                variant="outlined"
-                startIcon={<FavoriteBorder />}
-                onClick={() => toggleFavorite(recipe)}
-                sx={{
-                  bgcolor: isFavorite(recipe) ? "#e6951c" : "transparent",
-                  color: isFavorite(recipe) ? "white" : "black",
-                  "&:hover": { bgcolor: "#e6951c", color: "white" },
-                  borderColor: isFavorite(recipe) ? "#e6951c" : "black",
-                }}
-              >
-                {isFavorite(recipe) ? "Remove from Favorites" : "Save for Later"}
-              </Button>
+              {toggleFavorite && isFavorite && (
+                <Button
+                  variant="outlined"
+                  startIcon={<FavoriteBorder />}
+                  onClick={() => toggleFavorite(recipe)}
+                  sx={{
+                    bgcolor: isFavorite(recipe) ? "#e6951c" : "transparent",
+                    color: isFavorite(recipe) ? "white" : "black",
+                    "&:hover": { bgcolor: "#e6951c", color: "white" },
+                    borderColor: isFavorite(recipe) ? "#e6951c" : "black",
+                  }}
+                >
+                  {isFavorite(recipe) ? "Remove from Favorites" : "Save for Later"}
+                </Button>
+              )}
 
               <Button
                 variant="outlined"

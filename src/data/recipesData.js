@@ -70,7 +70,7 @@ export const recipesData = [
             "Step 4: Toss in the pasta and Parmesan cheese before serving."
         ],
         rating: 4,
-        dietaryRestrictions: ["No meat", "No gluten", "No shellfish", "No eggs", "No nuts"],
+        dietaryRestrictions: ["No meat", "No shellfish", "No eggs", "No nuts"],
     },
     {
         id: 5,
@@ -124,6 +124,6 @@ export const recipesData = [
             "Step 4: Garnish with Parmesan cheese and serve."
         ],
         rating: 5,
-        dietaryRestrictions: ["No meat", "No gluten", "No shellfish", "No eggs", "No nuts"],
+        dietaryRestrictions: ["No meat", "No shellfish", "No eggs", "No nuts"],
     },
 ];

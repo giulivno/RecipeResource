@@ -14,12 +14,12 @@ const Restrictions = ({ selectedRestrictions, setSelectedRestrictions }) => {
     <Box
   sx={{
     width: "100%",
-    padding: 1,                // Reduced padding
-    fontSize: "0.75rem",       // Smaller font size
+    padding: 1,                
+    fontSize: "0.75rem",       
     borderRadius: "4px",
     border: 1,
     borderColor: "#303030",
-    boxShadow: "0 0 4px rgba(0, 0, 0, 0.1)", // Lighter shadow
+    boxShadow: "0 0 4px rgba(0, 0, 0, 0.1)", 
   }}
 >
       <Typography

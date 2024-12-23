@@ -67,35 +67,49 @@ const Recipes = () => {
       setFilteredRecipes([]);
       return;
     }
+    
+    // Clear message when valid input is provided
+    setMessage(""); 
   
-    setMessage(""); // Clear message when valid input is provided
-  
-    const selectedItems = Object.values(selectedPantryItems).flat().map((item) => item.toLowerCase());
+    const selectedItems = Object.values(selectedPantryItems).flat().map((item) => item.trim().toLowerCase());
     const search = searchTerm.toLowerCase();
   
-    const filtered = recipesData.filter(({ title, description, ingredients, dietaryRestrictions }) => {
-      // Ingredients match if no pantry items are selected or if any ingredient matches
-      const ingredientsMatch = noPantryItems || ingredients.some((item) => selectedItems.includes(item.toLowerCase()));
+    const filtered = recipesData.map((recipe) => {
+      const { title, description, ingredients, dietaryRestrictions } = recipe;
   
-      // Restrictions match if no restrictions are selected or if the recipe satisfies all selected restrictions
-      const restrictionsMatch = noRestrictions || selectedRestrictions.every((res) => dietaryRestrictions.includes(res));
-  
-      // Search match if no search term is provided or if any field contains the search term
-      const searchMatch = noSearchTerm || [title, description, ...ingredients].some((field) =>
-        field.toLowerCase().includes(search)
+      // Calculate missing ingredients
+      const missingIngredients = ingredients.filter(
+        (ingredient) => !selectedItems.includes(ingredient.trim().toLowerCase())
       );
   
-      return ingredientsMatch && restrictionsMatch && searchMatch;
+      const ingredientsMatch =
+        noPantryItems || missingIngredients.length <= 4; 
+  
+      const restrictionsMatch =
+        noRestrictions || selectedRestrictions.every((res) => dietaryRestrictions.includes(res));
+  
+      const searchMatch =
+        noSearchTerm || [title, description, ...ingredients].some((field) =>
+          field.toLowerCase().includes(search)
+        );
+  
+      const matches = ingredientsMatch && restrictionsMatch && searchMatch;
+  
+      // Only include recipes with up to 4 missing ingredients
+      return matches && missingIngredients.length <= 4
+        ? { ...recipe, missingCount: missingIngredients.length }
+        : null;
     });
   
-    if (filtered.length === 0) {
+    const finalFiltered = filtered.filter((recipe) => recipe !== null);
+  
+    if (finalFiltered.length === 0) {
       setMessage("No recipes found matching your search criteria.");
     }
   
-    setFilteredRecipes(filtered);
+    setFilteredRecipes(finalFiltered);
   };
   
-
   const handleReset = () => {
     setSearchTerm("");
     setSelectedPantryItems({

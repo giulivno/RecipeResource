@@ -1,25 +1,24 @@
 import React from "react";
-import { Box, Button, TextField } from "@mui/material";
-import { CustomTextField } from "../styles"; // Ensure the path to CustomTextField is correct
+import { Box, Button } from "@mui/material";
+import { CustomTextField } from "../styles"; 
 
-const SearchBar = ({ searchTerm, handleSearch, handleFilter, handleReset }) => {
+const SearchBar = ({ searchTerm, handleSearch, handleFilter, handleReset, hideResetButton }) => {
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       handleFilter();
     }
   };
-  
+
   return (
     <Box
-  sx={{
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-    gap: 2,
-    marginTop: 4,
-    
-  }}
->
+      sx={{
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        gap: 2,
+        marginTop: 4,
+      }}
+    >
       {/* Custom Text Field for Search Input */}
       <CustomTextField
         value={searchTerm}
@@ -45,25 +44,26 @@ const SearchBar = ({ searchTerm, handleSearch, handleFilter, handleReset }) => {
           borderRadius: "4px",
         }}
         onClick={handleFilter}
-        
       >
         Search
       </Button>
 
-      {/* Reset Button */}
-      <Button
-        variant="contained"
-        sx={{
-          bgcolor: "#4caf50", // Green shade for the pantry buttons
-          color: "white",
-          "&:hover": { bgcolor: "#388e3c" }, // Darker green on hover
-          height: "44px",
-          borderRadius: "4px",
-        }}
-        onClick={handleReset}
-      >
-        Reset
-      </Button>
+      {/* Conditionally Render Reset Button */}
+      {!hideResetButton && (
+        <Button
+          variant="contained"
+          sx={{
+            bgcolor: "#4caf50", 
+            color: "white",
+            "&:hover": { bgcolor: "#388e3c" }, 
+            height: "44px",
+            borderRadius: "4px",
+          }}
+          onClick={handleReset}
+        >
+          Reset
+        </Button>
+      )}
     </Box>
   );
 };
