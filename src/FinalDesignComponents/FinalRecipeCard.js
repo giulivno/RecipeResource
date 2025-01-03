@@ -13,25 +13,43 @@ import { Box } from "@mui/material";
 const RecipeCard = ({ recipe, handleOpen, toggleFavorite, isFavorite }) => {
   const favoriteStatus = isFavorite ? isFavorite(recipe) : false;
 
+  // Utility function to remove HTML tags
+  const stripHtmlTags = (text) => {
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = text;
+    return tempDiv.textContent || tempDiv.innerText || "";
+  };
+
+  
+
+  // Utility function to truncate text
+  const truncateText = (text, limit) => {
+    const cleanedText = stripHtmlTags(text);
+    return cleanedText.length > limit ? `${cleanedText.slice(0, limit)}...` : cleanedText;
+  };
+
   return (
     <StyledCard onClick={() => handleOpen(recipe)}>
       {/* Recipe Image */}
       <CardMedia
         component="img"
         height="150"
-        image={recipe.image}
+        image={recipe.image || "/placeholder.jpg"} // Fallback to placeholder image
         alt="Recipe Image"
-        sx={{ objectFit: "cover" }} 
+        sx={{ objectFit: "cover" }}
       />
 
       {/* Recipe Content */}
-      <CardContent sx={{ padding: "8px", flexGrow: 1 }}> 
+      <CardContent sx={{ padding: "8px", flexGrow: 1 }}>
+        {/* Truncated Title */}
         <Typography variant="h6" color="#1d1b20">
-          {recipe.title}
+          {truncateText(recipe.title, 50)} {/* Limit to 50 characters */}
         </Typography>
+
+        {/* Truncated Description */}
         <Typography variant="body2" color="#49454F">
-          {recipe.description}
-        </Typography>
+        {truncateText(recipe.description || "No description available", 100)}
+</Typography>
 
         {/* Display missing ingredients count */}
         {recipe.missingCount > 0 && (
@@ -60,11 +78,6 @@ const RecipeCard = ({ recipe, handleOpen, toggleFavorite, isFavorite }) => {
           />
         </IconButton>
 
-        {/* Timer */}
-        <Timer fontSize="small" />
-        <Typography variant="caption" color="#f20597">
-          {recipe.time}
-        </Typography>
       </CardActions>
     </StyledCard>
   );

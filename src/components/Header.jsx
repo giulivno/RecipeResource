@@ -46,6 +46,7 @@ const Header = ({ handleMenuOpen, anchorEl, handleMenuClose, handleMenuClick }) 
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
       transformOrigin={{ vertical: "top", horizontal: "right" }}
     >
+      <MenuItem onClick={() => handleMenuClick("/FinalDesign")}>Final Design</MenuItem>
       <MenuItem onClick={() => handleMenuClick("/DesignA")}>Design A</MenuItem>
       <MenuItem onClick={() => handleMenuClick("/DesignB")}>Design B</MenuItem>
       <MenuItem onClick={() => handleMenuClick("/favorites")}>Favorite Recipes</MenuItem>

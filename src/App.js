@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline"; // Optional: Reset CSS styles
 import SignIn from "./SignIn";
+import FinalDesign from "./FinalDesign";
 import DesignA from './DesignA';
 import DesignB from './DesignB';
 import Favorites from "./Favorites";
@@ -58,6 +59,7 @@ function App() {
                       <>
                           <Route path="/DesignA" element={<DesignA />} />
                           {<Route path="/DesignB" element={<DesignB />} />}
+                          {<Route path="/FinalDesign" element={<FinalDesign />} />}
                           {<Route path="/favorites" element={<Favorites />} />}
                           {<Route path="/cooking-history" element={<CookingHistory />} />}
                               <Route path="/account-settings" element={<AccountSettings onSignOut={handleSignOut} />} />
